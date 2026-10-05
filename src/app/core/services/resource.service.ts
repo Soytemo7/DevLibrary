@@ -38,16 +38,35 @@ export class ResourceService {
     )
   }
 
-  search(query: string): Observable<Resource[]> {
-    return this.http.get<Resource[]>(
-      `${this.apiUrl}/search`,
-      {
-        params: {
-          q: query,
-        },
-      },
-    )
+  search(
+  query: string,
+  tag?: string,
+): Observable<Resource[]> {
+
+  const params: {
+    q?: string
+    tag?: string
+  } = {}
+
+  if (query.trim()) {
+
+    params.q =
+      query.trim()
   }
+
+  if (tag?.trim()) {
+
+    params.tag =
+      tag.trim()
+  }
+
+  return this.http.get<Resource[]>(
+    `${this.apiUrl}/search`,
+    {
+      params,
+    },
+  )
+}
 
   create(
     resource: Partial<Resource>,

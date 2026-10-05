@@ -1,14 +1,19 @@
 .search-page {
+
   max-width: 1000px;
 
   margin: auto;
+
 }
 
 .heading {
+
   margin-bottom: 2rem;
+
 }
 
 .eyebrow {
+
   color: #8b5cf6;
 
   font-size: 0.7rem;
@@ -16,9 +21,11 @@
   font-weight: 700;
 
   letter-spacing: 0.18em;
+
 }
 
 h1 {
+
   margin: 0.5rem 0;
 
   font-size: clamp(
@@ -28,25 +35,227 @@ h1 {
   );
 
   letter-spacing: -0.06em;
+
 }
 
 .heading p {
+
   color: #71717a;
+
 }
 
 .search-field {
+
   width: 100%;
+
 }
 
+/* ==========================================================
+   TAGS
+   ========================================================== */
+
+.tags-section {
+
+  margin-top: 1.5rem;
+
+}
+
+.tags-heading {
+
+  margin-bottom: 0.75rem;
+
+  color: #71717a;
+
+  font-size: 0.65rem;
+
+  font-weight: 700;
+
+  letter-spacing: 0.14em;
+
+}
+
+.tags {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 0.5rem;
+
+}
+
+.tag {
+
+  border: 1px solid rgba(
+    139,
+    92,
+    246,
+    0.2
+  );
+
+  border-radius: 999px;
+
+  padding: 0.45rem 0.75rem;
+
+  background: rgba(
+    139,
+    92,
+    246,
+    0.06
+  );
+
+  color: #a78bfa;
+
+  font: inherit;
+
+  font-size: 0.75rem;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+
+}
+
+.tag:hover {
+
+  border-color: rgba(
+    139,
+    92,
+    246,
+    0.5
+  );
+
+  background: rgba(
+    139,
+    92,
+    246,
+    0.12
+  );
+
+}
+
+.tag.active {
+
+  border-color: #8b5cf6;
+
+  background: rgba(
+    139,
+    92,
+    246,
+    0.2
+  );
+
+  color: white;
+
+}
+
+/* ==========================================================
+   FILTRO ACTIVO
+   ========================================================== */
+
+.active-filter {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 0.5rem;
+
+  margin-top: 1.5rem;
+
+  padding: 0.5rem 0.75rem;
+
+  border: 1px solid rgba(
+    139,
+    92,
+    246,
+    0.25
+  );
+
+  border-radius: 999px;
+
+  background: rgba(
+    139,
+    92,
+    246,
+    0.08
+  );
+
+  color: #a1a1aa;
+
+  font-size: 0.75rem;
+
+}
+
+.active-filter strong {
+
+  color: #c4b5fd;
+
+}
+
+.active-filter button {
+
+  width: 24px;
+
+  height: 24px;
+
+  display: grid;
+
+  place-items: center;
+
+  padding: 0;
+
+  border: 0;
+
+  border-radius: 50%;
+
+  background: transparent;
+
+  color: #a1a1aa;
+
+  cursor: pointer;
+
+}
+
+.active-filter button:hover {
+
+  background: rgba(
+    255,
+    255,
+    255,
+    0.08
+  );
+
+  color: white;
+
+}
+
+.active-filter mat-icon {
+
+  width: 16px;
+
+  height: 16px;
+
+  font-size: 16px;
+
+}
+
+/* ==========================================================
+   RESULTADOS
+   ========================================================== */
+
 .results {
+
   display: grid;
 
   gap: 0.75rem;
 
   margin-top: 2rem;
+
 }
 
 .result {
+
   display: grid;
 
   grid-template-columns:
@@ -74,9 +283,11 @@ h1 {
   text-decoration: none;
 
   transition: 0.2s;
+
 }
 
 .result:hover {
+
   border-color: rgba(
     139,
     92,
@@ -85,10 +296,13 @@ h1 {
   );
 
   transform: translateX(4px);
+
 }
 
 .icon {
+
   width: 44px;
+
   height: 44px;
 
   display: grid;
@@ -105,34 +319,135 @@ h1 {
   );
 
   color: #a78bfa;
+
 }
 
-.result span {
+.result-content > span {
+
   color: #8b5cf6;
 
   font-size: 0.65rem;
 
   font-weight: 700;
+
 }
 
 .result h2 {
+
   margin: 0.2rem 0;
 
   font-size: 1rem;
+
 }
 
 .result p {
+
   margin: 0;
 
   color: #71717a;
 
   font-size: 0.8rem;
+
 }
 
+/* ==========================================================
+   TAGS DE CADA RESULTADO
+   ========================================================== */
+
+.result-tags {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 0.35rem;
+
+  margin-top: 0.65rem;
+
+}
+
+.result-tag {
+
+  padding: 0.2rem 0.45rem;
+
+  border: 1px solid rgba(
+    139,
+    92,
+    246,
+    0.16
+  );
+
+  border-radius: 999px;
+
+  background: rgba(
+    139,
+    92,
+    246,
+    0.05
+  );
+
+  color: #a78bfa;
+
+  font: inherit;
+
+  font-size: 0.65rem;
+
+  cursor: pointer;
+
+}
+
+.result-tag:hover {
+
+  border-color: rgba(
+    139,
+    92,
+    246,
+    0.4
+  );
+
+  background: rgba(
+    139,
+    92,
+    246,
+    0.12
+  );
+
+}
+
+/* ==========================================================
+   ESTADOS
+   ========================================================== */
+
 .empty {
+
   padding: 4rem;
 
   text-align: center;
 
   color: #52525b;
+
+}
+
+.empty mat-icon {
+
+  margin-bottom: 0.5rem;
+
+}
+
+@media (max-width: 700px) {
+
+  .result {
+
+    grid-template-columns:
+      auto
+      1fr;
+
+  }
+
+  .result > mat-icon {
+
+    display: none;
+
+  }
+
 }

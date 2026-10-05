@@ -37,63 +37,176 @@
 
   </mat-form-field>
 
-  <div class="results">
+  @if (tags.length > 0) {
 
-    @for (
-      resource of resources;
-      track resource._id
-    ) {
+    <section class="tags-section">
 
-      <a
-        class="result"
-        [routerLink]="[
-          '/resource',
-          resource.slug
-        ]"
+      <div class="tags-heading">
+
+        <span>
+          EXPLORAR POR TAG
+        </span>
+
+      </div>
+
+      <div class="tags">
+
+        @for (
+          tag of tags;
+          track tag
+        ) {
+
+          <button
+            type="button"
+            class="tag"
+            [class.active]="
+              selectedTag === tag
+            "
+            (click)="selectTag(tag)"
+          >
+            #{{ tag }}
+          </button>
+
+        }
+
+      </div>
+
+    </section>
+
+  }
+
+  @if (selectedTag) {
+
+    <div class="active-filter">
+
+      <span>
+        Filtrando por:
+      </span>
+
+      <strong>
+        #{{ selectedTag }}
+      </strong>
+
+      <button
+        type="button"
+        (click)="clearTag()"
+        aria-label="Quitar filtro"
       >
+        <mat-icon>
+          close
+        </mat-icon>
+      </button>
 
-        <div class="icon">
+    </div>
+
+  }
+
+  @if (loading) {
+
+    <div class="empty">
+
+      <mat-icon>
+        sync
+      </mat-icon>
+
+      <p>
+        Buscando recursos...
+      </p>
+
+    </div>
+
+  } @else {
+
+    <div class="results">
+
+      @for (
+        resource of resources;
+        track resource._id
+      ) {
+
+        <a
+          class="result"
+          [routerLink]="[
+            '/resource',
+            resource.slug
+          ]"
+        >
+
+          <div class="icon">
+            <mat-icon>
+              language
+            </mat-icon>
+          </div>
+
+          <div class="result-content">
+
+            <span>
+              {{ resource.type }}
+            </span>
+
+            <h2>
+              {{ resource.title }}
+            </h2>
+
+            <p>
+              {{ resource.description }}
+            </p>
+
+            @if (
+              getTags(resource).length > 0
+            ) {
+
+              <div class="result-tags">
+
+                @for (
+                  tag of getTags(resource);
+                  track tag
+                ) {
+
+                  <button
+                    type="button"
+                    class="result-tag"
+                    (click)="
+                      $event.preventDefault();
+                      $event.stopPropagation();
+                      selectTag(tag)
+                    "
+                  >
+                    #{{ tag }}
+                  </button>
+
+                }
+
+              </div>
+
+            }
+
+          </div>
+
           <mat-icon>
-            language
+            arrow_forward
           </mat-icon>
-        </div>
 
-        <div>
+        </a>
 
-          <span>
-            {{ resource.type }}
-          </span>
+      } @empty {
 
-          <h2>
-            {{ resource.title }}
-          </h2>
+        <div class="empty">
+
+          <mat-icon>
+            search_off
+          </mat-icon>
 
           <p>
-            {{ resource.description }}
+            No encontramos recursos.
           </p>
 
         </div>
 
-        <mat-icon>
-          arrow_forward
-        </mat-icon>
+      }
 
-      </a>
+    </div>
 
-    } @empty {
-
-      <div class="empty">
-        <mat-icon>
-          search_off
-        </mat-icon>
-
-        <p>
-          No encontramos recursos.
-        </p>
-      </div>
-
-    }
-
-  </div>
+  }
 
 </section>
