@@ -1,0 +1,130 @@
+@if (loading) {
+
+  <div class="loading">
+    Cargando recurso...
+  </div>
+
+} @else if (resource) {
+
+  <article class="resource-detail">
+
+    <a
+      routerLink="/"
+      class="back"
+    >
+      <mat-icon>
+        arrow_back
+      </mat-icon>
+
+      Biblioteca
+    </a>
+
+    <div class="preview">
+
+      @if (resource.image) {
+
+        <img
+          [src]="resource.image"
+          [alt]="resource.title"
+        />
+
+      } @else {
+
+        <mat-icon>
+          language
+        </mat-icon>
+
+      }
+
+    </div>
+
+    <div class="content">
+
+      <div class="type">
+        {{ resource.type }}
+      </div>
+
+      <h1>
+        {{ resource.title }}
+      </h1>
+
+      <p class="description">
+        {{ resource.description }}
+      </p>
+
+      <div class="tags">
+
+        @for (
+          tag of resource.tags;
+          track tag
+        ) {
+
+          <span>
+            #{{ tag }}
+          </span>
+
+        }
+
+      </div>
+
+      @if (resource.technologies.length) {
+
+        <section>
+
+          <h2>
+            Tecnologías
+          </h2>
+
+          <div class="technology-list">
+
+            @for (
+              technology of resource.technologies;
+              track technology
+            ) {
+
+              <span>
+                {{ technology }}
+              </span>
+
+            }
+
+          </div>
+
+        </section>
+
+      }
+
+      @if (resource.notes) {
+
+        <section>
+
+          <h2>
+            Mis notas
+          </h2>
+
+          <div class="notes">
+            {{ resource.notes }}
+          </div>
+
+        </section>
+
+      }
+
+      <a
+        mat-flat-button
+        class="visit"
+        [href]="resource.url"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Visitar recurso
+        <mat-icon>
+          open_in_new
+        </mat-icon>
+      </a>
+
+    </div>
+
+  </article>
+
+}

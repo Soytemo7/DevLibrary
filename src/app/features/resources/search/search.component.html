@@ -1,0 +1,99 @@
+<section class="search-page">
+
+  <div class="heading">
+
+    <span class="eyebrow">
+      DISCOVER
+    </span>
+
+    <h1>
+      Buscar recursos
+    </h1>
+
+    <p>
+      Encuentra componentes, herramientas,
+      documentación y sitios que guardaste.
+    </p>
+
+  </div>
+
+  <mat-form-field
+    appearance="outline"
+    class="search-field"
+  >
+
+    <mat-icon matPrefix>
+      search
+    </mat-icon>
+
+    <mat-label>
+      Buscar...
+    </mat-label>
+
+    <input
+      matInput
+      [formControl]="searchControl"
+    />
+
+  </mat-form-field>
+
+  <div class="results">
+
+    @for (
+      resource of resources;
+      track resource._id
+    ) {
+
+      <a
+        class="result"
+        [routerLink]="[
+          '/resource',
+          resource.slug
+        ]"
+      >
+
+        <div class="icon">
+          <mat-icon>
+            language
+          </mat-icon>
+        </div>
+
+        <div>
+
+          <span>
+            {{ resource.type }}
+          </span>
+
+          <h2>
+            {{ resource.title }}
+          </h2>
+
+          <p>
+            {{ resource.description }}
+          </p>
+
+        </div>
+
+        <mat-icon>
+          arrow_forward
+        </mat-icon>
+
+      </a>
+
+    } @empty {
+
+      <div class="empty">
+        <mat-icon>
+          search_off
+        </mat-icon>
+
+        <p>
+          No encontramos recursos.
+        </p>
+      </div>
+
+    }
+
+  </div>
+
+</section>

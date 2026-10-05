@@ -1,1 +1,43 @@
-/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+html {
+  color-scheme: dark;
+
+  @include mat.theme((
+    color: mat.$violet-palette,
+    typography: Roboto,
+    density: 0
+  ));
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+
+  min-height: 100%;
+
+  background: #08080b;
+
+  font-family:
+    Inter,
+    Roboto,
+    Arial,
+    sans-serif;
+}
+
+body {
+  color: #fafafa;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}

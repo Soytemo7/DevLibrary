@@ -1,0 +1,97 @@
+<main class="login-page">
+
+  <section class="login-card">
+
+    <div class="brand">
+
+      <div class="brand-mark">
+        <mat-icon>code</mat-icon>
+      </div>
+
+      <div>
+        <strong>DevLibrary</strong>
+        <span>Developer Resource Library</span>
+      </div>
+
+    </div>
+
+    <div class="intro">
+
+      <span class="eyebrow">
+        PRIVATE LIBRARY
+      </span>
+
+      <h1>
+        Tu biblioteca
+        <br />
+        de recursos.
+      </h1>
+
+      <p>
+        Componentes, herramientas, documentación,
+        inspiración y recursos para desarrollo web.
+      </p>
+
+    </div>
+
+    <form
+      [formGroup]="form"
+      (ngSubmit)="submit()"
+    >
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          Correo electrónico
+        </mat-label>
+
+        <input
+          matInput
+          type="email"
+          formControlName="email"
+        />
+
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          Contraseña
+        </mat-label>
+
+        <input
+          matInput
+          type="password"
+          formControlName="password"
+        />
+
+      </mat-form-field>
+
+      @if (error) {
+        <div class="error">
+          {{ error }}
+        </div>
+      }
+
+      <button
+        mat-flat-button
+        class="login-button"
+        type="submit"
+        [disabled]="loading"
+      >
+        @if (loading) {
+          Entrando...
+        } @else {
+          Entrar a DevLibrary
+        }
+      </button>
+
+    </form>
+
+    <footer>
+      Biblioteca privada · DevLibrary
+    </footer>
+
+  </section>
+
+</main>

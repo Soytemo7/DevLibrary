@@ -1,0 +1,213 @@
+<section class="home">
+
+  <section class="hero">
+
+    <div class="hero-copy">
+
+      <span class="eyebrow">
+        PERSONAL DEVELOPER LIBRARY
+      </span>
+
+      <h1>
+        Todo lo bueno que encuentras,
+        <span>guardado.</span>
+      </h1>
+
+      <p>
+        Una biblioteca personal para conservar
+        componentes, herramientas, documentación,
+        inspiración y recursos que realmente
+        quieres volver a utilizar.
+      </p>
+
+      <a
+        mat-flat-button
+        routerLink="/search"
+        class="search-button"
+      >
+        <mat-icon>search</mat-icon>
+        Explorar recursos
+      </a>
+
+    </div>
+
+    <div class="hero-visual">
+
+      <div class="orbit orbit-one"></div>
+
+      <div class="orbit orbit-two"></div>
+
+      <div class="code-card">
+
+        <div class="code-card-header">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <div class="code-lines">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <mat-icon>code</mat-icon>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <section class="library-section">
+
+    <div class="section-heading">
+
+      <div>
+
+        <span class="eyebrow">
+          CURATED LIBRARY
+        </span>
+
+        <h2>
+          Recursos destacados
+        </h2>
+
+        <p>
+          Una selección de recursos que vale la pena conservar.
+        </p>
+
+      </div>
+
+      <a
+        routerLink="/search"
+        class="view-all"
+      >
+        Ver biblioteca
+        <mat-icon>arrow_forward</mat-icon>
+      </a>
+
+    </div>
+
+
+    @if (featured.length) {
+
+      <div class="resource-grid">
+
+        @for (
+          resource of featured;
+          track resource._id
+        ) {
+
+          <a
+            class="resource-card"
+            [routerLink]="[
+              '/resource',
+              resource.slug
+            ]"
+          >
+
+            <div class="resource-image">
+
+              @if (resource.image) {
+
+                <img
+                  [src]="resource.image"
+                  [alt]="resource.title"
+                  loading="lazy"
+                />
+
+              } @else {
+
+                <mat-icon>
+                  language
+                </mat-icon>
+
+              }
+
+              <span class="resource-overlay">
+                <mat-icon>open_in_new</mat-icon>
+              </span>
+
+            </div>
+
+
+            <div class="resource-content">
+
+              <div class="resource-meta">
+
+                <span class="resource-type">
+                  {{ resource.type }}
+                </span>
+
+                @if (resource.favorite) {
+
+                  <mat-icon>
+                    star
+                  </mat-icon>
+
+                }
+
+              </div>
+
+              <h3>
+                {{ resource.title }}
+              </h3>
+
+              <p>
+                {{ resource.description }}
+              </p>
+
+              @if (resource.tags?.length) {
+
+                <div class="tags">
+
+                  @for (
+                    tag of resource.tags.slice(0, 3);
+                    track tag
+                  ) {
+
+                    <span>
+                      #{{ tag }}
+                    </span>
+
+                  }
+
+                </div>
+
+              }
+
+            </div>
+
+          </a>
+
+        }
+
+      </div>
+
+    } @else {
+
+      <div class="empty">
+
+        <div class="empty-icon">
+          <mat-icon>inventory_2</mat-icon>
+        </div>
+
+        <h3>
+          Tu biblioteca está vacía
+        </h3>
+
+        <p>
+          Agrega tu primer recurso desde el panel administrativo.
+        </p>
+
+      </div>
+
+    }
+
+  </section>
+
+</section>
