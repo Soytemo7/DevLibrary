@@ -7,3 +7,4 @@ export const environment = {
 
   supabasePublishableKey: 'sb_publishable_lW8O9ISDSaAQZVGDE8cR_A_lTjb-CbO',
 }
+
