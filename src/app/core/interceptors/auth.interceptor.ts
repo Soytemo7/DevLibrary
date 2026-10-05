@@ -33,23 +33,7 @@ export const authInterceptor: HttpInterceptorFn = (
     switchMap(
       (token) => {
 
-        console.log(
-          '[AUTH INTERCEPTOR] URL:',
-          req.url,
-        )
-
-        console.log(
-          '[AUTH INTERCEPTOR] Token:',
-          token
-            ? 'TOKEN PRESENTE'
-            : 'TOKEN AUSENTE',
-        )
-
         if (!token) {
-
-          console.error(
-            '[AUTH INTERCEPTOR] NO HAY TOKEN',
-          )
 
           return next(req)
         }
@@ -61,10 +45,6 @@ export const authInterceptor: HttpInterceptorFn = (
                 `Bearer ${token}`,
             },
           })
-
-        console.log(
-          '[AUTH INTERCEPTOR] Authorization agregado',
-        )
 
         return next(
           authenticatedRequest,

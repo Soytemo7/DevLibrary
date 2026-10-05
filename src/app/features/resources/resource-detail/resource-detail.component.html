@@ -3,9 +3,11 @@
   <div class="state">
 
     <div class="state-icon">
+
       <mat-icon>
         sync
       </mat-icon>
+
     </div>
 
     <h2>
@@ -23,9 +25,11 @@
   <div class="state">
 
     <div class="state-icon">
+
       <mat-icon>
         cloud_off
       </mat-icon>
+
     </div>
 
     <h2>
@@ -40,11 +44,13 @@
       routerLink="/"
       class="state-link"
     >
+
       <mat-icon>
         arrow_back
       </mat-icon>
 
       Volver a la biblioteca
+
     </a>
 
   </div>
@@ -54,9 +60,11 @@
   <div class="state">
 
     <div class="state-icon">
+
       <mat-icon>
         search_off
       </mat-icon>
+
     </div>
 
     <h2>
@@ -71,11 +79,13 @@
       routerLink="/"
       class="state-link"
     >
+
       <mat-icon>
         arrow_back
       </mat-icon>
 
       Volver a la biblioteca
+
     </a>
 
   </div>
@@ -223,6 +233,82 @@
         </a>
 
       }
+
+
+      <section class="management">
+
+        <div class="management-heading">
+
+          <span>
+            ADMINISTRATION
+          </span>
+
+          <h2>
+            Gestionar recurso
+          </h2>
+
+          <p>
+            Modifica la información o elimina este recurso de tu biblioteca.
+          </p>
+
+        </div>
+
+
+        <div class="management-actions">
+
+          <button
+            mat-stroked-button
+            type="button"
+            class="edit-button"
+            (click)="edit()"
+          >
+
+            <mat-icon>
+              edit
+            </mat-icon>
+
+            Modificar
+
+          </button>
+
+
+          <button
+            mat-stroked-button
+            type="button"
+            class="delete-button"
+            (click)="delete()"
+            [disabled]="deleting"
+          >
+
+            <mat-icon>
+              delete
+            </mat-icon>
+
+            {{ deleting
+              ? 'Eliminando...'
+              : 'Eliminar'
+            }}
+
+          </button>
+
+        </div>
+
+
+        @if (deleteError) {
+
+          <div class="delete-error">
+
+            <mat-icon>
+              error
+            </mat-icon>
+
+            {{ deleteError }}
+
+          </div>
+
+        }
+
+      </section>
 
     </div>
 

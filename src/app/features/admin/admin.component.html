@@ -23,239 +23,262 @@
   </div>
 
 
-  <form
-    [formGroup]="form"
-    (ngSubmit)="save()"
-  >
+  @if (loading) {
 
-    <mat-form-field appearance="outline">
+    <div class="loading">
 
-      <mat-label>
-        Título
-      </mat-label>
-
-      <input
-        matInput
-        formControlName="title"
-      />
-
-      @if (
-        form.controls.title.invalid &&
-        form.controls.title.touched
-      ) {
-
-        <mat-error>
-          El título es obligatorio.
-        </mat-error>
-
-      }
-
-    </mat-form-field>
-
-
-    <mat-form-field appearance="outline">
-
-      <mat-label>
-        URL
-      </mat-label>
-
-      <input
-        matInput
-        formControlName="url"
-      />
-
-      @if (
-        form.controls.url.invalid &&
-        form.controls.url.touched
-      ) {
-
-        <mat-error>
-          La URL es obligatoria.
-        </mat-error>
-
-      }
-
-    </mat-form-field>
-
-
-    <mat-form-field appearance="outline">
-
-      <mat-label>
-        Descripción
-      </mat-label>
-
-      <textarea
-        matInput
-        rows="4"
-        formControlName="description"
-      ></textarea>
-
-    </mat-form-field>
-
-
-    <mat-form-field appearance="outline">
-
-      <mat-label>
-        Imagen / Screenshot
-      </mat-label>
-
-      <input
-        matInput
-        formControlName="image"
-        placeholder="https://..."
-      />
-
-      <mat-hint>
-        URL de la imagen o screenshot.
-      </mat-hint>
-
-    </mat-form-field>
-
-
-    <mat-form-field appearance="outline">
-
-      <mat-label>
-        Tipo
-      </mat-label>
-
-      <mat-select
-        formControlName="type"
-      >
-
-        <mat-option value="WEB_PAGE">
-          Página web
-        </mat-option>
-
-        <mat-option value="COMPONENT">
-          Componente
-        </mat-option>
-
-        <mat-option value="SNIPPET">
-          Snippet
-        </mat-option>
-
-        <mat-option value="DOCUMENTATION">
-          Documentación
-        </mat-option>
-
-        <mat-option value="VIDEO">
-          Video
-        </mat-option>
-
-        <mat-option value="TOOL">
-          Herramienta
-        </mat-option>
-
-        <mat-option value="GITHUB_REPOSITORY">
-          GitHub
-        </mat-option>
-
-        <mat-option value="ARTICLE">
-          Artículo
-        </mat-option>
-
-        <mat-option value="OTHER">
-          Otro
-        </mat-option>
-
-      </mat-select>
-
-    </mat-form-field>
-
-
-    <mat-form-field appearance="outline">
-
-      <mat-label>
-        Tags
-      </mat-label>
-
-      <input
-        matInput
-        formControlName="tags"
-        placeholder="angular, css, animation"
-      />
-
-      <mat-hint>
-        Separa cada tag con una coma.
-      </mat-hint>
-
-    </mat-form-field>
-
-
-    <mat-form-field appearance="outline">
-
-      <mat-label>
-        Tecnologías
-      </mat-label>
-
-      <input
-        matInput
-        formControlName="technologies"
-        placeholder="Angular, SCSS, TypeScript"
-      />
-
-      <mat-hint>
-        Separa cada tecnología con una coma.
-      </mat-hint>
-
-    </mat-form-field>
-
-
-    <mat-form-field appearance="outline">
-
-      <mat-label>
-        Mis notas
-      </mat-label>
-
-      <textarea
-        matInput
-        rows="5"
-        formControlName="notes"
-      ></textarea>
-
-    </mat-form-field>
-
-
-    <label class="checkbox">
-
-      <input
-        type="checkbox"
-        formControlName="featured"
-      />
-
-      <span>
-        Mostrar como destacado
-      </span>
-
-    </label>
-
-
-    <div class="form-actions">
-
-      <button
-        mat-flat-button
-        type="submit"
-        [disabled]="saving"
-      >
+      <div class="loading-icon">
 
         <mat-icon>
-          {{ editingId
-            ? 'save'
-            : 'add'
-          }}
+          sync
         </mat-icon>
 
-        {{ saving
-          ? 'Guardando...'
-          : editingId
-            ? 'Guardar cambios'
-            : 'Guardar recurso'
-        }}
+      </div>
 
-      </button>
+      <h2>
+        Cargando recurso...
+      </h2>
+
+      <p>
+        Estamos recuperando la información para editarla.
+      </p>
+
+    </div>
+
+  } @else {
+
+    <form
+      [formGroup]="form"
+      (ngSubmit)="save()"
+    >
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          Título
+        </mat-label>
+
+        <input
+          matInput
+          formControlName="title"
+        />
+
+        @if (
+          form.controls.title.invalid &&
+          form.controls.title.touched
+        ) {
+
+          <mat-error>
+            El título es obligatorio.
+          </mat-error>
+
+        }
+
+      </mat-form-field>
 
 
-      @if (editingId) {
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          URL
+        </mat-label>
+
+        <input
+          matInput
+          formControlName="url"
+          type="url"
+        />
+
+        @if (
+          form.controls.url.invalid &&
+          form.controls.url.touched
+        ) {
+
+          <mat-error>
+            La URL es obligatoria.
+          </mat-error>
+
+        }
+
+      </mat-form-field>
+
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          Descripción
+        </mat-label>
+
+        <textarea
+          matInput
+          rows="4"
+          formControlName="description"
+        ></textarea>
+
+      </mat-form-field>
+
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          Imagen / Screenshot
+        </mat-label>
+
+        <input
+          matInput
+          formControlName="image"
+          placeholder="https://..."
+        />
+
+        <mat-hint>
+          URL de la imagen o screenshot.
+        </mat-hint>
+
+      </mat-form-field>
+
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          Tipo
+        </mat-label>
+
+        <mat-select
+          formControlName="type"
+        >
+
+          <mat-option value="WEB_PAGE">
+            Página web
+          </mat-option>
+
+          <mat-option value="COMPONENT">
+            Componente
+          </mat-option>
+
+          <mat-option value="SNIPPET">
+            Snippet
+          </mat-option>
+
+          <mat-option value="DOCUMENTATION">
+            Documentación
+          </mat-option>
+
+          <mat-option value="VIDEO">
+            Video
+          </mat-option>
+
+          <mat-option value="TOOL">
+            Herramienta
+          </mat-option>
+
+          <mat-option value="GITHUB_REPOSITORY">
+            GitHub
+          </mat-option>
+
+          <mat-option value="ARTICLE">
+            Artículo
+          </mat-option>
+
+          <mat-option value="OTHER">
+            Otro
+          </mat-option>
+
+        </mat-select>
+
+      </mat-form-field>
+
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          Tags
+        </mat-label>
+
+        <input
+          matInput
+          formControlName="tags"
+          placeholder="angular, css, animation"
+        />
+
+        <mat-hint>
+          Separa cada tag con una coma.
+        </mat-hint>
+
+      </mat-form-field>
+
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          Tecnologías
+        </mat-label>
+
+        <input
+          matInput
+          formControlName="technologies"
+          placeholder="Angular, SCSS, TypeScript"
+        />
+
+        <mat-hint>
+          Separa cada tecnología con una coma.
+        </mat-hint>
+
+      </mat-form-field>
+
+
+      <mat-form-field appearance="outline">
+
+        <mat-label>
+          Mis notas
+        </mat-label>
+
+        <textarea
+          matInput
+          rows="5"
+          formControlName="notes"
+        ></textarea>
+
+      </mat-form-field>
+
+
+      <label class="checkbox">
+
+        <input
+          type="checkbox"
+          formControlName="featured"
+        />
+
+        <span>
+          Mostrar como destacado
+        </span>
+
+      </label>
+
+
+      <div class="form-actions">
+
+        <button
+          mat-flat-button
+          type="submit"
+          [disabled]="saving"
+        >
+
+          <mat-icon>
+            {{ editingId
+              ? 'save'
+              : 'add'
+            }}
+          </mat-icon>
+
+          {{ saving
+            ? 'Guardando...'
+            : editingId
+              ? 'Guardar cambios'
+              : 'Guardar recurso'
+          }}
+
+        </button>
+
 
         <button
           mat-stroked-button
@@ -266,239 +289,53 @@
         >
 
           <mat-icon>
-            close
+            {{ editingId
+              ? 'close'
+              : 'arrow_back'
+            }}
           </mat-icon>
 
-          Cancelar edición
+          {{ editingId
+            ? 'Cancelar edición'
+            : 'Volver a la biblioteca'
+          }}
 
         </button>
 
+      </div>
+
+
+      @if (saved) {
+
+        <div class="success">
+
+          <mat-icon>
+            check_circle
+          </mat-icon>
+
+          Recurso guardado correctamente.
+
+        </div>
+
       }
 
-    </div>
 
+      @if (errorMessage) {
 
-    @if (saved) {
+        <div class="error">
 
-      <div class="success">
+          <mat-icon>
+            error
+          </mat-icon>
 
-        <mat-icon>
-          check_circle
-        </mat-icon>
+          {{ errorMessage }}
 
-        Recurso guardado correctamente.
+        </div>
 
-      </div>
+      }
 
-    }
+    </form>
 
-
-    @if (errorMessage) {
-
-      <div class="error">
-
-        <mat-icon>
-          error
-        </mat-icon>
-
-        {{ errorMessage }}
-
-      </div>
-
-    }
-
-  </form>
-
-
-  <section class="resources-section">
-
-    <div class="section-heading">
-
-      <div>
-
-        <span>
-          LIBRARY
-        </span>
-
-        <h2>
-          Recursos existentes
-        </h2>
-
-        <p>
-          Modifica o elimina cualquier recurso de tu biblioteca.
-        </p>
-
-      </div>
-
-      <div class="resource-count">
-        {{ resources().length }}
-        {{ resources().length === 1
-          ? 'recurso'
-          : 'recursos'
-        }}
-      </div>
-
-    </div>
-
-
-    @if (resources().length > 0) {
-
-      <div class="resource-list">
-
-        @for (
-          resource of resources();
-          track resource._id
-        ) {
-
-          <article class="resource-item">
-
-            <div class="resource-preview">
-
-              @if (resource.image) {
-
-                <img
-                  [src]="resource.image"
-                  [alt]="resource.title"
-                  loading="lazy"
-                />
-
-              } @else {
-
-                <mat-icon>
-                  language
-                </mat-icon>
-
-              }
-
-            </div>
-
-
-            <div class="resource-info">
-
-              <div class="resource-meta">
-
-                <span class="resource-type">
-                  {{ resource.type }}
-                </span>
-
-                @if (resource.featured) {
-
-                  <span class="featured">
-
-                    <mat-icon>
-                      star
-                    </mat-icon>
-
-                    Destacado
-
-                  </span>
-
-                }
-
-              </div>
-
-
-              <h3>
-                {{ resource.title }}
-              </h3>
-
-
-              <p>
-                {{ resource.description }}
-              </p>
-
-
-              @if (
-                resource.tags &&
-                resource.tags.length > 0
-              ) {
-
-                <div class="tags">
-
-                  @for (
-                    tag of resource.tags;
-                    track tag
-                  ) {
-
-                    <span>
-                      #{{ tag }}
-                    </span>
-
-                  }
-
-                </div>
-
-              }
-
-            </div>
-
-
-            <div class="resource-actions">
-
-              <button
-                mat-stroked-button
-                type="button"
-                (click)="edit(resource)"
-              >
-
-                <mat-icon>
-                  edit
-                </mat-icon>
-
-                Editar
-
-              </button>
-
-
-              <button
-                mat-stroked-button
-                type="button"
-                class="delete-button"
-                (click)="delete(resource)"
-                [disabled]="
-                  deletingId === resource._id
-                "
-              >
-
-                <mat-icon>
-                  delete
-                </mat-icon>
-
-                {{ deletingId === resource._id
-                  ? 'Eliminando...'
-                  : 'Eliminar'
-                }}
-
-              </button>
-
-            </div>
-
-          </article>
-
-        }
-
-      </div>
-
-    } @else {
-
-      <div class="empty">
-
-        <mat-icon>
-          inventory_2
-        </mat-icon>
-
-        <h3>
-          No hay recursos todavía
-        </h3>
-
-        <p>
-          Agrega tu primer recurso utilizando el formulario.
-        </p>
-
-      </div>
-
-    }
-
-  </section>
+  }
 
 </section>

@@ -2,14 +2,22 @@ import {
   Component,
   inject,
   OnInit,
-  signal,
 } from '@angular/core'
+
+import {
+  ActivatedRoute,
+  Router,
+} from '@angular/router'
 
 import {
   FormBuilder,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms'
+
+import {
+  finalize,
+} from 'rxjs'
 
 import {
   MatFormFieldModule,
@@ -68,16 +76,21 @@ export class AdminComponent
   private readonly service =
     inject(ResourceService)
 
-  readonly resources =
-    signal<Resource[]>([])
+  private readonly route =
+    inject(ActivatedRoute)
+
+  private readonly router =
+    inject(Router)
 
   editingId: string | null = null
+
+  editingSlug: string | null = null
 
   saved = false
 
   saving = false
 
-  deletingId: string | null = null
+  loading = false
 
   errorMessage = ''
 
@@ -115,37 +128,193 @@ export class AdminComponent
 
   ngOnInit(): void {
 
-    this.loadResources()
+    const editSlug =
+      this.route.snapshot.queryParamMap.get(
+        'edit',
+      )
+
+    if (!editSlug) {
+
+      this.prepareNewResource()
+
+      return
+    }
+
+    const storedResource =
+      sessionStorage.getItem(
+        'devlibrary-edit-resource',
+      )
+
+    if (storedResource) {
+
+      try {
+
+        const resource =
+          JSON.parse(
+            storedResource,
+          ) as Resource
+
+        /*
+         * Evitamos que el recurso viejo quede
+         * almacenado después de cargarlo.
+         */
+
+        sessionStorage.removeItem(
+          'devlibrary-edit-resource',
+        )
+
+        this.loadResourceIntoForm(
+          resource,
+        )
+
+        return
+
+      } catch {
+
+        sessionStorage.removeItem(
+          'devlibrary-edit-resource',
+        )
+      }
+    }
+
+    /*
+     * Si entramos directamente a:
+     *
+     * /admin?edit=opencapture
+     *
+     * hacemos la consulta normal al backend.
+     */
+
+    this.loadResourceFromApi(
+      editSlug,
+    )
   }
 
-  private loadResources(): void {
+  private prepareNewResource(): void {
+
+    this.editingId = null
+
+    this.editingSlug = null
+
+    this.saved = false
+
+    this.loading = false
+
+    this.errorMessage = ''
+
+    this.form.reset({
+
+      title: '',
+
+      description: '',
+
+      url: '',
+
+      image: '',
+
+      type: 'WEB_PAGE',
+
+      tags: '',
+
+      technologies: '',
+
+      notes: '',
+
+      featured: false,
+
+    })
+  }
+
+  private loadResourceIntoForm(
+    resource: Resource,
+  ): void {
+
+    this.editingId =
+      resource._id
+
+    this.editingSlug =
+      resource.slug
+
+    this.saved = false
+
+    this.loading = false
+
+    this.errorMessage = ''
+
+    this.form.patchValue({
+
+      title:
+        resource.title ?? '',
+
+      description:
+        resource.description ?? '',
+
+      url:
+        resource.url ?? '',
+
+      image:
+        resource.image ?? '',
+
+      type:
+        resource.type ?? 'WEB_PAGE',
+
+      tags:
+        this.formatList(
+          resource.tags,
+        ),
+
+      technologies:
+        this.formatList(
+          resource.technologies,
+        ),
+
+      notes:
+        resource.notes ?? '',
+
+      featured:
+        resource.featured ?? false,
+
+    })
+  }
+
+  private loadResourceFromApi(
+    slug: string,
+  ): void {
+
+    this.loading = true
 
     this.errorMessage = ''
 
     this.service
-      .getAll()
+      .getBySlug(slug)
+      .pipe(
+        finalize(() => {
+
+          this.loading = false
+
+        }),
+      )
       .subscribe({
 
-        next: resources => {
+        next: resource => {
 
-          this.resources.set(
-            Array.isArray(resources)
-              ? resources
-              : [],
+          if (!resource) {
+
+            this.errorMessage =
+              'No fue posible encontrar el recurso.'
+
+            return
+          }
+
+          this.loadResourceIntoForm(
+            resource,
           )
         },
 
-        error: error => {
-
-          console.error(
-            'Error al cargar recursos:',
-            error,
-          )
-
-          this.resources.set([])
+        error: () => {
 
           this.errorMessage =
-            'No fue posible cargar los recursos.'
+            'No fue posible cargar el recurso para editarlo.'
         },
 
       })
@@ -169,7 +338,7 @@ export class AdminComponent
     const value =
       this.form.getRawValue()
 
-    const data = {
+    const data: Partial<Resource> = {
 
       title:
         value.title.trim(),
@@ -184,7 +353,7 @@ export class AdminComponent
         value.image.trim(),
 
       type:
-        value.type as any,
+        value.type as Resource['type'],
 
       tags:
         this.parseList(
@@ -224,38 +393,13 @@ export class AdminComponent
 
         this.saved = true
 
-        if (this.editingId) {
-
-          this.resources.update(
-            resources =>
-              resources.map(
-                current =>
-                  current._id === resource._id
-                    ? resource
-                    : current,
-              ),
-          )
-
-        } else {
-
-          this.resources.update(
-            resources => [
-              resource,
-              ...resources,
-            ],
-          )
-        }
-
-        this.resetForm()
-
+        this.router.navigate([
+          '/resource',
+          resource.slug,
+        ])
       },
 
-      error: error => {
-
-        console.error(
-          'Error al guardar recurso:',
-          error,
-        )
+      error: () => {
 
         this.saving = false
 
@@ -266,152 +410,21 @@ export class AdminComponent
     })
   }
 
-  edit(
-    resource: Resource,
-  ): void {
-
-    this.editingId =
-      resource._id
-
-    this.saved = false
-
-    this.errorMessage = ''
-
-    this.form.patchValue({
-
-      title:
-        resource.title ?? '',
-
-      description:
-        resource.description ?? '',
-
-      url:
-        resource.url ?? '',
-
-      image:
-        resource.image ?? '',
-
-      type:
-        resource.type ?? 'WEB_PAGE',
-
-      tags:
-        this.formatList(
-          resource.tags,
-        ),
-
-      technologies:
-        this.formatList(
-          resource.technologies,
-        ),
-
-      notes:
-        resource.notes ?? '',
-
-      featured:
-        resource.featured ?? false,
-
-    })
-
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    })
-  }
-
   cancelEdit(): void {
 
-    this.resetForm()
-  }
+    if (this.editingSlug) {
 
-  delete(
-    resource: Resource,
-  ): void {
+      this.router.navigate([
+        '/resource',
+        this.editingSlug,
+      ])
 
-    if (!resource._id) {
       return
     }
 
-    const confirmed =
-      window.confirm(
-        `¿Eliminar "${resource.title}"?\n\nEsta acción no se puede deshacer.`,
-      )
-
-    if (!confirmed) {
-      return
-    }
-
-    this.deletingId =
-      resource._id
-
-    this.errorMessage = ''
-
-    this.service
-      .delete(resource._id)
-      .subscribe({
-
-        next: () => {
-
-          this.resources.update(
-            resources =>
-              resources.filter(
-                current =>
-                  current._id !== resource._id,
-              ),
-          )
-
-          this.deletingId = null
-
-          if (
-            this.editingId ===
-            resource._id
-          ) {
-
-            this.resetForm()
-          }
-
-        },
-
-        error: error => {
-
-          console.error(
-            'Error al eliminar recurso:',
-            error,
-          )
-
-          this.deletingId = null
-
-          this.errorMessage =
-            'No fue posible eliminar el recurso.'
-        },
-
-      })
-  }
-
-  private resetForm(): void {
-
-    this.editingId = null
-
-    this.form.reset({
-
-      title: '',
-
-      description: '',
-
-      url: '',
-
-      image: '',
-
-      type: 'WEB_PAGE',
-
-      tags: '',
-
-      technologies: '',
-
-      notes: '',
-
-      featured: false,
-
-    })
+    this.router.navigate([
+      '/',
+    ])
   }
 
   private parseList(

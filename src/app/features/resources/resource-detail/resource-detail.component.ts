@@ -7,6 +7,7 @@ import {
 
 import {
   ActivatedRoute,
+  Router,
   RouterLink,
 } from '@angular/router'
 
@@ -49,6 +50,9 @@ export class ResourceDetailComponent
   private readonly route =
     inject(ActivatedRoute)
 
+  private readonly router =
+    inject(Router)
+
   private readonly resourceService =
     inject(ResourceService)
 
@@ -63,6 +67,10 @@ export class ResourceDetailComponent
 
   readonly error =
     signal(false)
+
+  deleting = false
+
+  deleteError = ''
 
   ngOnInit(): void {
 
@@ -98,21 +106,13 @@ export class ResourceDetailComponent
 
     this.resource.set(null)
 
-    console.log(
-      '[RESOURCE DETAIL] Buscando:',
-      slug,
-    )
+    this.deleteError = ''
 
     this.resourceService
       .getBySlug(slug)
       .subscribe({
 
         next: resource => {
-
-          console.log(
-            '[RESOURCE DETAIL] Recurso recibido:',
-            resource,
-          )
 
           if (!resource) {
 
@@ -128,16 +128,87 @@ export class ResourceDetailComponent
           this.loading.set(false)
         },
 
-        error: error => {
-
-          console.error(
-            '[RESOURCE DETAIL] Error:',
-            error,
-          )
+        error: () => {
 
           this.loading.set(false)
 
           this.error.set(true)
+        },
+
+      })
+  }
+
+  edit(): void {
+
+    const resource =
+      this.resource()
+
+    if (!resource) {
+      return
+    }
+
+    sessionStorage.setItem(
+      'devlibrary-edit-resource',
+      JSON.stringify(resource),
+    )
+
+    this.router.navigate(
+      ['/admin'],
+      {
+        queryParams: {
+          edit: resource.slug,
+        },
+      },
+    )
+  }
+
+  delete(): void {
+
+    const currentResource =
+      this.resource()
+
+    if (
+      !currentResource ||
+      !currentResource._id ||
+      this.deleting
+    ) {
+      return
+    }
+
+    const confirmed =
+      window.confirm(
+        `¿Eliminar "${currentResource.title}"?\n\nEsta acción no se puede deshacer.`,
+      )
+
+    if (!confirmed) {
+      return
+    }
+
+    this.deleting = true
+
+    this.deleteError = ''
+
+    this.resourceService
+      .delete(
+        currentResource._id,
+      )
+      .subscribe({
+
+        next: () => {
+
+          this.deleting = false
+
+          this.router.navigate([
+            '/',
+          ])
+        },
+
+        error: () => {
+
+          this.deleting = false
+
+          this.deleteError =
+            'No fue posible eliminar el recurso.'
         },
 
       })
@@ -214,7 +285,7 @@ export class ResourceDetailComponent
           )
 
       technologies.push(
-        ...separated,
+        ...separated
       )
     }
 

@@ -2,11 +2,13 @@
   display: block;
 }
 
+
 .resource-detail {
   max-width: 1100px;
 
   margin: 0 auto;
 }
+
 
 .back {
   display: inline-flex;
@@ -27,9 +29,11 @@
     color 0.2s ease;
 }
 
+
 .back:hover {
   color: #a78bfa;
 }
+
 
 .back mat-icon {
   width: 18px;
@@ -67,6 +71,7 @@
   background: #111116;
 }
 
+
 .preview img {
   width: 100%;
 
@@ -74,6 +79,7 @@
 
   object-fit: cover;
 }
+
 
 .preview mat-icon {
   width: 70px;
@@ -94,6 +100,7 @@
   max-width: 850px;
 }
 
+
 .type {
   color: #8b5cf6;
 
@@ -103,6 +110,7 @@
 
   letter-spacing: 0.15em;
 }
+
 
 h1 {
   margin: 0.5rem 0 1rem;
@@ -117,6 +125,7 @@ h1 {
 
   letter-spacing: -0.06em;
 }
+
 
 .description {
   color: #a1a1aa;
@@ -141,6 +150,7 @@ h1 {
 
   margin: 1.5rem 0;
 }
+
 
 .tags span,
 .technology-list span {
@@ -175,6 +185,7 @@ h1 {
 section {
   margin-top: 3rem;
 }
+
 
 section h2 {
   margin-bottom: 1rem;
@@ -229,7 +240,190 @@ section h2 {
   color: #09090b !important;
 }
 
+
 .visit mat-icon {
+  width: 18px;
+
+  height: 18px;
+
+  font-size: 18px;
+}
+
+
+/* ================================
+   GESTIÓN
+================================ */
+
+.management {
+  margin-top: 4rem;
+
+  padding: 1.5rem;
+
+  border: 1px solid rgba(
+    255,
+    255,
+    255,
+    0.07
+  );
+
+  border-radius: 18px;
+
+  background: rgba(
+    255,
+    255,
+    255,
+    0.02
+  );
+}
+
+
+.management-heading span {
+  color: #8b5cf6;
+
+  font-size: 0.65rem;
+
+  font-weight: 700;
+
+  letter-spacing: 0.16em;
+}
+
+
+.management-heading h2 {
+  margin: 0.4rem 0 0.35rem;
+
+  color: #d4d4d8;
+
+  font-size: 1.1rem;
+}
+
+
+.management-heading p {
+  margin: 0;
+
+  color: #71717a;
+
+  font-size: 0.8rem;
+
+  line-height: 1.6;
+}
+
+
+.management-actions {
+  display: flex;
+
+  align-items: center;
+
+  gap: 0.65rem;
+
+  margin-top: 1.25rem;
+}
+
+
+.management-actions button {
+  min-height: 42px;
+
+  border-radius: 10px !important;
+}
+
+
+.edit-button {
+  border-color: rgba(
+    255,
+    255,
+    255,
+    0.12
+  ) !important;
+
+  color: #d4d4d8 !important;
+}
+
+
+.edit-button:hover {
+  background: rgba(
+    255,
+    255,
+    255,
+    0.05
+  ) !important;
+
+  border-color: rgba(
+    139,
+    92,
+    246,
+    0.35
+  ) !important;
+
+  color: #c4b5fd !important;
+}
+
+
+.delete-button {
+  border-color: rgba(
+    239,
+    68,
+    68,
+    0.2
+  ) !important;
+
+  color: #fca5a5 !important;
+}
+
+
+.delete-button:hover:not(:disabled) {
+  background: rgba(
+    239,
+    68,
+    68,
+    0.08
+  ) !important;
+
+  border-color: rgba(
+    239,
+    68,
+    68,
+    0.4
+  ) !important;
+}
+
+
+.management-actions mat-icon {
+  width: 17px;
+
+  height: 17px;
+
+  margin-right: 0.25rem;
+
+  font-size: 17px;
+}
+
+
+.delete-error {
+  display: flex;
+
+  align-items: center;
+
+  gap: 0.45rem;
+
+  margin-top: 1rem;
+
+  padding: 0.7rem 0.8rem;
+
+  border-radius: 9px;
+
+  background: rgba(
+    239,
+    68,
+    68,
+    0.08
+  );
+
+  color: #fca5a5;
+
+  font-size: 0.78rem;
+}
+
+
+.delete-error mat-icon {
   width: 18px;
 
   height: 18px;
@@ -260,6 +454,7 @@ section h2 {
   color: #71717a;
 }
 
+
 .state-icon {
   width: 64px;
 
@@ -288,6 +483,7 @@ section h2 {
   );
 }
 
+
 .state-icon mat-icon {
   width: 30px;
 
@@ -298,6 +494,7 @@ section h2 {
   color: #8b5cf6;
 }
 
+
 .state h2 {
   margin: 0 0 0.5rem;
 
@@ -305,6 +502,7 @@ section h2 {
 
   font-size: 1.15rem;
 }
+
 
 .state p {
   margin: 0;
@@ -315,6 +513,7 @@ section h2 {
 
   line-height: 1.6;
 }
+
 
 .state-link {
   display: inline-flex;
@@ -332,9 +531,11 @@ section h2 {
   font-size: 0.85rem;
 }
 
+
 .state-link:hover {
   color: #c4b5fd;
 }
+
 
 .state-link mat-icon {
   width: 18px;
@@ -357,6 +558,7 @@ section h2 {
     border-radius: 18px;
   }
 
+
   h1 {
     font-size: clamp(
       2.5rem,
@@ -365,8 +567,26 @@ section h2 {
     );
   }
 
+
   .description {
     font-size: 0.95rem;
+  }
+
+
+  .management {
+    padding: 1.25rem;
+  }
+
+
+  .management-actions {
+    flex-direction: column;
+
+    align-items: stretch;
+  }
+
+
+  .management-actions button {
+    width: 100%;
   }
 
 }

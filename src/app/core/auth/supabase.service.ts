@@ -35,32 +35,11 @@ export class SupabaseService {
 
   constructor() {
 
-    console.log(
-      '[SUPABASE] Servicio iniciado',
-    )
-
-    console.log(
-      '[SUPABASE] URL:',
-      environment.supabaseUrl,
-    )
-
     this.initialization =
       this.initialize()
 
     this.client.auth.onAuthStateChange(
-      (event, session) => {
-
-        console.log(
-          '[SUPABASE] Auth event:',
-          event,
-        )
-
-        console.log(
-          '[SUPABASE] Sesión:',
-          session
-            ? 'PRESENTE'
-            : 'AUSENTE',
-        )
+      (_event, session) => {
 
         this.session.set(
           session,
@@ -75,29 +54,12 @@ export class SupabaseService {
 
   private async initialize(): Promise<void> {
 
-    console.log(
-      '[SUPABASE] Inicializando sesión...',
-    )
-
     const {
       data: {
         session,
       },
-      error,
     } =
       await this.client.auth.getSession()
-
-    console.log(
-      '[SUPABASE] getSession error:',
-      error,
-    )
-
-    console.log(
-      '[SUPABASE] getSession sesión:',
-      session
-        ? 'PRESENTE'
-        : 'AUSENTE',
-    )
 
     this.session.set(
       session,
@@ -113,10 +75,6 @@ export class SupabaseService {
     password: string,
   ): Promise<void> {
 
-    console.log(
-      '[SUPABASE] Intentando login...',
-    )
-
     const {
       data,
       error,
@@ -128,20 +86,8 @@ export class SupabaseService {
 
     if (error) {
 
-      console.error(
-        '[SUPABASE] Error login:',
-        error,
-      )
-
       throw error
     }
-
-    console.log(
-      '[SUPABASE] Login correcto:',
-      data.session
-        ? 'SESIÓN OBTENIDA'
-        : 'SIN SESIÓN',
-    )
 
     this.session.set(
       data.session,
@@ -173,21 +119,8 @@ export class SupabaseService {
       data: {
         session,
       },
-      error,
     } =
       await this.client.auth.getSession()
-
-    console.log(
-      '[SUPABASE] getAccessToken error:',
-      error,
-    )
-
-    console.log(
-      '[SUPABASE] getAccessToken:',
-      session
-        ? 'TOKEN DISPONIBLE'
-        : 'SIN TOKEN',
-    )
 
     return (
       session?.access_token ??
