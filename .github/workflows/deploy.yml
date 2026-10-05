@@ -24,7 +24,7 @@ jobs:
     steps:
 
       - name: Descargar repositorio
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Configurar Bun
         uses: oven-sh/setup-bun@v2
@@ -43,7 +43,7 @@ jobs:
       - name: Subir artefacto
         uses: actions/upload-pages-artifact@v4
         with:
-          path: ./dist/devlibrary-frontend
+          path: ./dist/devlibrary-frontend/browser
 
   deploy:
     runs-on: ubuntu-latest
@@ -56,5 +56,6 @@ jobs:
     steps:
 
       - name: Publicar en GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
 
