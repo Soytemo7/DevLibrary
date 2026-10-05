@@ -34,11 +34,15 @@ import {
     MatButtonModule,
   ],
 
-  templateUrl: './home.component.html',
+  templateUrl:
+    './home.component.html',
 
-  styleUrl: './home.component.scss',
+  styleUrl:
+    './home.component.scss',
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent
+  implements OnInit {
+
   private readonly resourceService =
     inject(ResourceService)
 
@@ -47,24 +51,38 @@ export class HomeComponent implements OnInit {
   featured: Resource[] = []
 
   ngOnInit(): void {
+
     this.resourceService
       .getAll()
       .subscribe({
+
         next: resources => {
+
           this.resources = resources
 
-          this.featured =
+          const featured =
             resources
               .filter(
                 resource =>
                   resource.featured,
               )
               .slice(0, 6)
+
+          this.featured =
+            featured.length
+              ? featured
+              : resources.slice(0, 6)
         },
 
         error: error => {
-          console.error(error)
+
+          console.error(
+            'Error al cargar los recursos:',
+            error,
+          )
+
         },
+
       })
   }
 }

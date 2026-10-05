@@ -38,7 +38,8 @@ jobs:
         run: bunx ng build --base-href /DevLibrary/
 
       - name: Crear fallback para GitHub Pages
-        run: cp dist/devlibrary-frontend/browser/index.html dist/devlibrary-frontend/browser/404.html
+        run: |
+          cp dist/devlibrary-frontend/browser/index.html dist/devlibrary-frontend/browser/404.html
 
       - name: Configurar GitHub Pages
         uses: actions/configure-pages@v5
