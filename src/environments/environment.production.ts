@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
 
-  apiUrl: 'https://TU_BACKEND/api',
+  apiUrl: 'https://devlibrarybackend.onrender.com/api',
 
   supabaseUrl: 'https://cceotodinskrveslcqvx.supabase.co',
 
