@@ -1,6 +1,7 @@
 import {
   Component,
   inject,
+  OnDestroy,
   OnInit,
 } from '@angular/core'
 
@@ -12,14 +13,15 @@ import {
 import {
   ActivatedRoute,
   Router,
-  RouterLink,
 } from '@angular/router'
 
 import {
+  Subject,
   debounceTime,
   distinctUntilChanged,
-  startWith,
+  map,
   switchMap,
+  takeUntil,
 } from 'rxjs'
 
 import {
@@ -49,7 +51,6 @@ import {
 
   imports: [
     ReactiveFormsModule,
-    RouterLink,
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
@@ -62,7 +63,7 @@ import {
     './search.component.scss',
 })
 export class SearchComponent
-  implements OnInit {
+  implements OnInit, OnDestroy {
 
   private readonly service =
     inject(ResourceService)
@@ -72,6 +73,9 @@ export class SearchComponent
 
   private readonly router =
     inject(Router)
+
+  private readonly destroy$ =
+    new Subject<void>()
 
   readonly searchControl =
     new FormControl('', {
@@ -88,37 +92,111 @@ export class SearchComponent
 
   loading = false
 
-  constructor() {
+  ngOnInit(): void {
+
+    this.loadTags()
+
+    this.route.queryParamMap
+      .pipe(
+        map(
+          params =>
+            params.get('tag')?.trim() ?? '',
+        ),
+        distinctUntilChanged(),
+        takeUntil(
+          this.destroy$,
+        ),
+      )
+      .subscribe(
+        tag => {
+
+          this.selectedTag =
+            tag
+
+          this.search()
+        },
+      )
 
     this.searchControl.valueChanges
       .pipe(
-        startWith(''),
-
-        debounceTime(250),
-
+        map(
+          value =>
+            value.trim(),
+        ),
+        debounceTime(300),
         distinctUntilChanged(),
+        takeUntil(
+          this.destroy$,
+        ),
+      )
+      .subscribe(
+        () => {
+          this.search()
+        },
+      )
 
-        switchMap(query => {
+    this.search()
+  }
 
-          this.loading = true
+  private search(): void {
 
-          const cleanQuery =
-            query.trim()
+    const query =
+      this.searchControl.value.trim()
 
-          if (this.selectedTag) {
+    const tag =
+      this.selectedTag.trim()
 
-            return this.service.search(
-              cleanQuery,
-              this.selectedTag,
+    this.loading = true
+
+    if (
+      !query &&
+      !tag
+    ) {
+
+      this.service
+        .getAll()
+        .pipe(
+          takeUntil(
+            this.destroy$,
+          ),
+        )
+        .subscribe({
+
+          next: resources => {
+
+            this.resources =
+              Array.isArray(resources)
+                ? resources
+                : []
+
+            this.loading = false
+          },
+
+          error: error => {
+
+            console.error(
+              'Error al cargar recursos:',
+              error,
             )
-          }
 
-          return cleanQuery
-            ? this.service.search(
-                cleanQuery,
-              )
-            : this.service.getAll()
-        }),
+            this.resources = []
+            this.loading = false
+          },
+
+        })
+
+      return
+    }
+
+    this.service
+      .search(
+        query,
+        tag || undefined,
+      )
+      .pipe(
+        takeUntil(
+          this.destroy$,
+        ),
       )
       .subscribe({
 
@@ -132,35 +210,74 @@ export class SearchComponent
           this.loading = false
         },
 
-        error: () => {
+        error: error => {
+
+          console.error(
+            'Error al buscar recursos:',
+            error,
+          )
 
           this.resources = []
-
           this.loading = false
         },
 
       })
   }
 
-  ngOnInit(): void {
+  searchImmediately(): void {
+    this.search()
+  }
 
-    this.route.queryParamMap.subscribe(
-      params => {
+  selectTag(
+    tag: string,
+  ): void {
 
-        const tag =
-          params.get('tag')?.trim() ?? ''
+    const cleanTag =
+      tag.trim()
 
-        this.selectedTag = tag
+    if (!cleanTag) {
+      return
+    }
 
-        this.loadTags()
+    this.router.navigate(
+      ['/search'],
+      {
+        queryParams: {
+          tag: cleanTag,
+        },
       },
     )
+  }
+
+  clearTag(): void {
+
+    this.router.navigate(
+      ['/search'],
+      {
+        queryParams: {},
+      },
+    )
+  }
+
+  openResource(
+    slug: string,
+  ): void {
+
+    this.router.navigate([
+      '/resource',
+      slug,
+    ])
   }
 
   private loadTags(): void {
 
     this.service
       .getAll()
+      .pipe(
+        takeUntil(
+          this.destroy$,
+        ),
+      )
       .subscribe({
 
         next: resources => {
@@ -179,52 +296,10 @@ export class SearchComponent
         error: () => {
 
           this.allResources = []
-
           this.tags = []
         },
 
       })
-  }
-
-  selectTag(tag: string): void {
-
-    const cleanTag =
-      tag.trim()
-
-    if (!cleanTag) {
-      return
-    }
-
-    this.selectedTag =
-      cleanTag
-
-    this.router.navigate(
-      ['/search'],
-      {
-        queryParams: {
-          tag: cleanTag,
-        },
-      },
-    )
-
-    this.searchControl.updateValueAndValidity()
-    this.searchControl.setValue(
-      this.searchControl.value,
-    )
-  }
-
-  clearTag(): void {
-
-    this.selectedTag = ''
-
-    this.router.navigate(
-      ['/search'],
-    )
-
-    this.searchControl.updateValueAndValidity()
-    this.searchControl.setValue(
-      this.searchControl.value,
-    )
   }
 
   private extractTags(
@@ -240,7 +315,9 @@ export class SearchComponent
 
       if (
         !resource.tags ||
-        !Array.isArray(resource.tags)
+        !Array.isArray(
+          resource.tags,
+        )
       ) {
         continue
       }
@@ -257,10 +334,12 @@ export class SearchComponent
           value
             .split(/\s+/)
             .map(
-              tag => tag.trim(),
+              tag =>
+                tag.trim(),
             )
             .filter(
-              tag => tag.length > 0,
+              tag =>
+                tag.length > 0,
             )
 
         for (
@@ -280,7 +359,8 @@ export class SearchComponent
           b,
           'es',
           {
-            sensitivity: 'base',
+            sensitivity:
+              'base',
           },
         ),
     )
@@ -311,10 +391,12 @@ export class SearchComponent
         value
           .split(/\s+/)
           .map(
-            tag => tag.trim(),
+            tag =>
+              tag.trim(),
           )
           .filter(
-            tag => tag.length > 0,
+            tag =>
+              tag.length > 0,
           )
 
       tags.push(
@@ -323,5 +405,11 @@ export class SearchComponent
     }
 
     return tags
+  }
+
+  ngOnDestroy(): void {
+
+    this.destroy$.next()
+    this.destroy$.complete()
   }
 }

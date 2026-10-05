@@ -451,3 +451,12 @@ h1 {
   }
 
 }
+
+.result {
+  cursor: pointer;
+}
+
+.result:focus-visible {
+  outline: 2px solid #8b5cf6;
+  outline-offset: 3px;
+}

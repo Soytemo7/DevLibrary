@@ -33,6 +33,8 @@
     <input
       matInput
       [formControl]="searchControl"
+      autocomplete="off"
+      (keydown.enter)="searchImmediately()"
     />
 
   </mat-form-field>
@@ -42,11 +44,9 @@
     <section class="tags-section">
 
       <div class="tags-heading">
-
         <span>
           EXPLORAR POR TAG
         </span>
-
       </div>
 
       <div class="tags">
@@ -124,18 +124,22 @@
         track resource._id
       ) {
 
-        <a
+        <article
           class="result"
-          [routerLink]="[
-            '/resource',
-            resource.slug
-          ]"
+          tabindex="0"
+          role="link"
+          (click)="openResource(resource.slug)"
+          (keydown.enter)="
+            openResource(resource.slug)
+          "
         >
 
           <div class="icon">
+
             <mat-icon>
               language
             </mat-icon>
+
           </div>
 
           <div class="result-content">
@@ -167,7 +171,6 @@
                     type="button"
                     class="result-tag"
                     (click)="
-                      $event.preventDefault();
                       $event.stopPropagation();
                       selectTag(tag)
                     "
@@ -187,7 +190,7 @@
             arrow_forward
           </mat-icon>
 
-        </a>
+        </article>
 
       } @empty {
 
