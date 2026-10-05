@@ -37,6 +37,7 @@
   color: #8b5cf6;
 
   font-size: 0.68rem;
+
   font-weight: 700;
 
   letter-spacing: 0.18em;
@@ -68,6 +69,7 @@
   );
 
   background-clip: text;
+
   -webkit-background-clip: text;
 
   color: transparent;
@@ -89,6 +91,7 @@
   display: inline-flex;
 
   align-items: center;
+
   gap: 0.5rem;
 
   height: 48px;
@@ -115,10 +118,11 @@
 }
 
 .search-button mat-icon {
-  font-size: 19px;
-
   width: 19px;
+
   height: 19px;
+
+  font-size: 19px;
 }
 
 
@@ -151,6 +155,7 @@
 
 .orbit-one {
   width: 310px;
+
   height: 170px;
 
   transform: rotate(-22deg);
@@ -158,6 +163,7 @@
 
 .orbit-two {
   width: 410px;
+
   height: 225px;
 
   transform: rotate(32deg);
@@ -167,11 +173,13 @@
   position: relative;
 
   width: 190px;
+
   height: 150px;
 
   padding: 1rem;
 
   display: flex;
+
   flex-direction: column;
 
   border: 1px solid rgba(
@@ -217,6 +225,7 @@
 
 .code-card-header span {
   width: 6px;
+
   height: 6px;
 
   border-radius: 50%;
@@ -226,6 +235,7 @@
 
 .code-lines {
   display: flex;
+
   flex-direction: column;
 
   gap: 8px;
@@ -270,9 +280,11 @@
   position: absolute;
 
   right: 1rem;
+
   bottom: 1rem;
 
   width: 28px;
+
   height: 28px;
 
   font-size: 28px;
@@ -339,6 +351,7 @@
 
 .view-all mat-icon {
   width: 18px;
+
   height: 18px;
 
   font-size: 18px;
@@ -348,6 +361,83 @@
   color: #c4b5fd;
 
   transform: translateX(3px);
+}
+
+
+/* ================================
+   LOADING
+================================ */
+
+.loading {
+  min-height: 220px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 1rem;
+
+  border: 1px dashed rgba(
+    255,
+    255,
+    255,
+    0.1
+  );
+
+  border-radius: 20px;
+
+  color: #71717a;
+}
+
+.loading-icon {
+  width: 58px;
+
+  height: 58px;
+
+  display: grid;
+
+  place-items: center;
+
+  border-radius: 16px;
+
+  background: rgba(
+    255,
+    255,
+    255,
+    0.04
+  );
+}
+
+.loading-icon mat-icon {
+  width: 28px;
+
+  height: 28px;
+
+  font-size: 28px;
+
+  color: #a78bfa;
+
+  animation: loading-spin 1.2s linear infinite;
+}
+
+.loading p {
+  margin: 0;
+
+  font-size: 0.82rem;
+}
+
+@keyframes loading-spin {
+  from {
+    transform: rotate(0);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 
@@ -439,6 +529,7 @@
 
 .resource-image img {
   width: 100%;
+
   height: 100%;
 
   object-fit: cover;
@@ -447,12 +538,14 @@
     transform 0.35s ease;
 }
 
-.resource-card:hover .resource-image img {
+.resource-card:hover
+.resource-image img {
   transform: scale(1.04);
 }
 
 .resource-image > mat-icon {
   width: 48px;
+
   height: 48px;
 
   font-size: 48px;
@@ -464,9 +557,11 @@
   position: absolute;
 
   top: 12px;
+
   right: 12px;
 
   width: 32px;
+
   height: 32px;
 
   display: grid;
@@ -502,12 +597,14 @@
 
 .resource-overlay mat-icon {
   width: 16px;
+
   height: 16px;
 
   font-size: 16px;
 }
 
-.resource-card:hover .resource-overlay {
+.resource-card:hover
+.resource-overlay {
   opacity: 1;
 
   transform: translateY(0);
@@ -542,6 +639,7 @@
 
 .resource-meta mat-icon {
   width: 17px;
+
   height: 17px;
 
   font-size: 17px;
@@ -577,8 +675,14 @@
   line-height: 1.55;
 
   -webkit-box-orient: vertical;
+
   -webkit-line-clamp: 2;
 }
+
+
+/* ================================
+   TAGS
+================================ */
 
 .tags {
   display: flex;
@@ -631,6 +735,7 @@
 
 .empty-icon {
   width: 58px;
+
   height: 58px;
 
   margin: 0 auto 1rem;
@@ -651,6 +756,7 @@
 
 .empty-icon mat-icon {
   width: 30px;
+
   height: 30px;
 
   font-size: 30px;

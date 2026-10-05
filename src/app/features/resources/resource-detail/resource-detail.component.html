@@ -1,10 +1,86 @@
-@if (loading) {
+@if (loading()) {
 
-  <div class="loading">
-    Cargando recurso...
+  <div class="state">
+
+    <div class="state-icon">
+      <mat-icon>
+        sync
+      </mat-icon>
+    </div>
+
+    <h2>
+      Cargando recurso...
+    </h2>
+
+    <p>
+      Estamos recuperando la información.
+    </p>
+
   </div>
 
-} @else if (resource) {
+} @else if (error()) {
+
+  <div class="state">
+
+    <div class="state-icon">
+      <mat-icon>
+        cloud_off
+      </mat-icon>
+    </div>
+
+    <h2>
+      No fue posible cargar el recurso
+    </h2>
+
+    <p>
+      Ocurrió un problema al comunicarnos con el servidor.
+    </p>
+
+    <a
+      routerLink="/"
+      class="state-link"
+    >
+      <mat-icon>
+        arrow_back
+      </mat-icon>
+
+      Volver a la biblioteca
+    </a>
+
+  </div>
+
+} @else if (notFound()) {
+
+  <div class="state">
+
+    <div class="state-icon">
+      <mat-icon>
+        search_off
+      </mat-icon>
+    </div>
+
+    <h2>
+      Recurso no encontrado
+    </h2>
+
+    <p>
+      El recurso solicitado no existe o ya no está disponible.
+    </p>
+
+    <a
+      routerLink="/"
+      class="state-link"
+    >
+      <mat-icon>
+        arrow_back
+      </mat-icon>
+
+      Volver a la biblioteca
+    </a>
+
+  </div>
+
+} @else if (resource(); as currentResource) {
 
   <article class="resource-detail">
 
@@ -12,20 +88,23 @@
       routerLink="/"
       class="back"
     >
+
       <mat-icon>
         arrow_back
       </mat-icon>
 
       Biblioteca
+
     </a>
+
 
     <div class="preview">
 
-      @if (resource.image) {
+      @if (currentResource.image) {
 
         <img
-          [src]="resource.image"
-          [alt]="resource.title"
+          [src]="currentResource.image"
+          [alt]="currentResource.title"
         />
 
       } @else {
@@ -38,36 +117,49 @@
 
     </div>
 
+
     <div class="content">
 
       <div class="type">
-        {{ resource.type }}
+        {{ currentResource.type }}
       </div>
+
 
       <h1>
-        {{ resource.title }}
+        {{ currentResource.title }}
       </h1>
 
+
       <p class="description">
-        {{ resource.description }}
+        {{ currentResource.description }}
       </p>
 
-      <div class="tags">
 
-        @for (
-          tag of resource.tags;
-          track tag
-        ) {
+      @if (
+        getTags(currentResource).length > 0
+      ) {
 
-          <span>
-            #{{ tag }}
-          </span>
+        <div class="tags">
 
-        }
+          @for (
+            tag of getTags(currentResource);
+            track tag
+          ) {
 
-      </div>
+            <span>
+              #{{ tag }}
+            </span>
 
-      @if (resource.technologies.length) {
+          }
+
+        </div>
+
+      }
+
+
+      @if (
+        getTechnologies(currentResource).length > 0
+      ) {
 
         <section>
 
@@ -78,7 +170,7 @@
           <div class="technology-list">
 
             @for (
-              technology of resource.technologies;
+              technology of getTechnologies(currentResource);
               track technology
             ) {
 
@@ -94,7 +186,8 @@
 
       }
 
-      @if (resource.notes) {
+
+      @if (currentResource.notes) {
 
         <section>
 
@@ -103,25 +196,33 @@
           </h2>
 
           <div class="notes">
-            {{ resource.notes }}
+            {{ currentResource.notes }}
           </div>
 
         </section>
 
       }
 
-      <a
-        mat-flat-button
-        class="visit"
-        [href]="resource.url"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Visitar recurso
-        <mat-icon>
-          open_in_new
-        </mat-icon>
-      </a>
+
+      @if (currentResource.url) {
+
+        <a
+          mat-flat-button
+          class="visit"
+          [href]="currentResource.url"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+
+          Visitar recurso
+
+          <mat-icon>
+            open_in_new
+          </mat-icon>
+
+        </a>
+
+      }
 
     </div>
 

@@ -2,6 +2,7 @@ import {
   Component,
   inject,
   OnInit,
+  signal,
 } from '@angular/core'
 
 import {
@@ -26,6 +27,7 @@ import {
 
 @Component({
   selector: 'app-home',
+
   standalone: true,
 
   imports: [
@@ -46,11 +48,28 @@ export class HomeComponent
   private readonly resourceService =
     inject(ResourceService)
 
-  resources: Resource[] = []
+  readonly resources =
+    signal<Resource[]>([])
 
-  featured: Resource[] = []
+  readonly loading =
+    signal(true)
+
+  readonly error =
+    signal(false)
+
+  readonly displayedResources =
+    signal<Resource[]>([])
 
   ngOnInit(): void {
+
+    this.loadResources()
+  }
+
+  private loadResources(): void {
+
+    this.loading.set(true)
+
+    this.error.set(false)
 
     this.resourceService
       .getAll()
@@ -58,20 +77,30 @@ export class HomeComponent
 
         next: resources => {
 
-          this.resources = resources
+          const safeResources =
+            Array.isArray(resources)
+              ? resources
+              : []
+
+          this.resources.set(
+            safeResources,
+          )
 
           const featured =
-            resources
+            safeResources
               .filter(
                 resource =>
-                  resource.featured,
+                  resource.featured === true,
               )
               .slice(0, 6)
 
-          this.featured =
-            featured.length
+          this.displayedResources.set(
+            featured.length > 0
               ? featured
-              : resources.slice(0, 6)
+              : safeResources.slice(0, 6),
+          )
+
+          this.loading.set(false)
         },
 
         error: error => {
@@ -81,8 +110,54 @@ export class HomeComponent
             error,
           )
 
+          this.resources.set([])
+
+          this.displayedResources.set([])
+
+          this.error.set(true)
+
+          this.loading.set(false)
         },
 
       })
+  }
+
+  getTags(
+    resource: Resource,
+  ): string[] {
+
+    if (
+      !resource.tags ||
+      !resource.tags.length
+    ) {
+      return []
+    }
+
+    const tags: string[] = []
+
+    for (
+      const tag of resource.tags
+    ) {
+
+      if (!tag) {
+        continue
+      }
+
+      const separated =
+        tag
+          .split(/\s+/)
+          .map(
+            value => value.trim(),
+          )
+          .filter(
+            value => value.length > 0,
+          )
+
+      tags.push(
+        ...separated,
+      )
+    }
+
+    return tags.slice(0, 3)
   }
 }

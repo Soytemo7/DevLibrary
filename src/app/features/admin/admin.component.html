@@ -7,15 +7,21 @@
     </span>
 
     <h1>
-      Agregar recurso
+      {{ editingId
+        ? 'Editar recurso'
+        : 'Agregar recurso'
+      }}
     </h1>
 
     <p>
-      Guarda algo que quieras volver a encontrar
-      posteriormente.
+      {{ editingId
+        ? 'Corrige o actualiza la información del recurso.'
+        : 'Guarda algo que quieras volver a encontrar posteriormente.'
+      }}
     </p>
 
   </div>
+
 
   <form
     [formGroup]="form"
@@ -23,6 +29,7 @@
   >
 
     <mat-form-field appearance="outline">
+
       <mat-label>
         Título
       </mat-label>
@@ -31,9 +38,23 @@
         matInput
         formControlName="title"
       />
+
+      @if (
+        form.controls.title.invalid &&
+        form.controls.title.touched
+      ) {
+
+        <mat-error>
+          El título es obligatorio.
+        </mat-error>
+
+      }
+
     </mat-form-field>
 
+
     <mat-form-field appearance="outline">
+
       <mat-label>
         URL
       </mat-label>
@@ -42,9 +63,23 @@
         matInput
         formControlName="url"
       />
+
+      @if (
+        form.controls.url.invalid &&
+        form.controls.url.touched
+      ) {
+
+        <mat-error>
+          La URL es obligatoria.
+        </mat-error>
+
+      }
+
     </mat-form-field>
 
+
     <mat-form-field appearance="outline">
+
       <mat-label>
         Descripción
       </mat-label>
@@ -54,9 +89,12 @@
         rows="4"
         formControlName="description"
       ></textarea>
+
     </mat-form-field>
 
+
     <mat-form-field appearance="outline">
+
       <mat-label>
         Imagen / Screenshot
       </mat-label>
@@ -64,8 +102,15 @@
       <input
         matInput
         formControlName="image"
+        placeholder="https://..."
       />
+
+      <mat-hint>
+        URL de la imagen o screenshot.
+      </mat-hint>
+
     </mat-form-field>
+
 
     <mat-form-field appearance="outline">
 
@@ -109,11 +154,17 @@
           Artículo
         </mat-option>
 
+        <mat-option value="OTHER">
+          Otro
+        </mat-option>
+
       </mat-select>
 
     </mat-form-field>
 
+
     <mat-form-field appearance="outline">
+
       <mat-label>
         Tags
       </mat-label>
@@ -123,9 +174,16 @@
         formControlName="tags"
         placeholder="angular, css, animation"
       />
+
+      <mat-hint>
+        Separa cada tag con una coma.
+      </mat-hint>
+
     </mat-form-field>
 
+
     <mat-form-field appearance="outline">
+
       <mat-label>
         Tecnologías
       </mat-label>
@@ -135,9 +193,16 @@
         formControlName="technologies"
         placeholder="Angular, SCSS, TypeScript"
       />
+
+      <mat-hint>
+        Separa cada tecnología con una coma.
+      </mat-hint>
+
     </mat-form-field>
 
+
     <mat-form-field appearance="outline">
+
       <mat-label>
         Mis notas
       </mat-label>
@@ -147,7 +212,9 @@
         rows="5"
         formControlName="notes"
       ></textarea>
+
     </mat-form-field>
+
 
     <label class="checkbox">
 
@@ -156,25 +223,282 @@
         formControlName="featured"
       />
 
-      Mostrar como destacado
+      <span>
+        Mostrar como destacado
+      </span>
 
     </label>
 
-    <button
-      mat-flat-button
-      type="submit"
-    >
-      Guardar recurso
-    </button>
+
+    <div class="form-actions">
+
+      <button
+        mat-flat-button
+        type="submit"
+        [disabled]="saving"
+      >
+
+        <mat-icon>
+          {{ editingId
+            ? 'save'
+            : 'add'
+          }}
+        </mat-icon>
+
+        {{ saving
+          ? 'Guardando...'
+          : editingId
+            ? 'Guardar cambios'
+            : 'Guardar recurso'
+        }}
+
+      </button>
+
+
+      @if (editingId) {
+
+        <button
+          mat-stroked-button
+          type="button"
+          class="cancel-button"
+          (click)="cancelEdit()"
+          [disabled]="saving"
+        >
+
+          <mat-icon>
+            close
+          </mat-icon>
+
+          Cancelar edición
+
+        </button>
+
+      }
+
+    </div>
+
 
     @if (saved) {
 
       <div class="success">
+
+        <mat-icon>
+          check_circle
+        </mat-icon>
+
         Recurso guardado correctamente.
+
+      </div>
+
+    }
+
+
+    @if (errorMessage) {
+
+      <div class="error">
+
+        <mat-icon>
+          error
+        </mat-icon>
+
+        {{ errorMessage }}
+
       </div>
 
     }
 
   </form>
+
+
+  <section class="resources-section">
+
+    <div class="section-heading">
+
+      <div>
+
+        <span>
+          LIBRARY
+        </span>
+
+        <h2>
+          Recursos existentes
+        </h2>
+
+        <p>
+          Modifica o elimina cualquier recurso de tu biblioteca.
+        </p>
+
+      </div>
+
+      <div class="resource-count">
+        {{ resources().length }}
+        {{ resources().length === 1
+          ? 'recurso'
+          : 'recursos'
+        }}
+      </div>
+
+    </div>
+
+
+    @if (resources().length > 0) {
+
+      <div class="resource-list">
+
+        @for (
+          resource of resources();
+          track resource._id
+        ) {
+
+          <article class="resource-item">
+
+            <div class="resource-preview">
+
+              @if (resource.image) {
+
+                <img
+                  [src]="resource.image"
+                  [alt]="resource.title"
+                  loading="lazy"
+                />
+
+              } @else {
+
+                <mat-icon>
+                  language
+                </mat-icon>
+
+              }
+
+            </div>
+
+
+            <div class="resource-info">
+
+              <div class="resource-meta">
+
+                <span class="resource-type">
+                  {{ resource.type }}
+                </span>
+
+                @if (resource.featured) {
+
+                  <span class="featured">
+
+                    <mat-icon>
+                      star
+                    </mat-icon>
+
+                    Destacado
+
+                  </span>
+
+                }
+
+              </div>
+
+
+              <h3>
+                {{ resource.title }}
+              </h3>
+
+
+              <p>
+                {{ resource.description }}
+              </p>
+
+
+              @if (
+                resource.tags &&
+                resource.tags.length > 0
+              ) {
+
+                <div class="tags">
+
+                  @for (
+                    tag of resource.tags;
+                    track tag
+                  ) {
+
+                    <span>
+                      #{{ tag }}
+                    </span>
+
+                  }
+
+                </div>
+
+              }
+
+            </div>
+
+
+            <div class="resource-actions">
+
+              <button
+                mat-stroked-button
+                type="button"
+                (click)="edit(resource)"
+              >
+
+                <mat-icon>
+                  edit
+                </mat-icon>
+
+                Editar
+
+              </button>
+
+
+              <button
+                mat-stroked-button
+                type="button"
+                class="delete-button"
+                (click)="delete(resource)"
+                [disabled]="
+                  deletingId === resource._id
+                "
+              >
+
+                <mat-icon>
+                  delete
+                </mat-icon>
+
+                {{ deletingId === resource._id
+                  ? 'Eliminando...'
+                  : 'Eliminar'
+                }}
+
+              </button>
+
+            </div>
+
+          </article>
+
+        }
+
+      </div>
+
+    } @else {
+
+      <div class="empty">
+
+        <mat-icon>
+          inventory_2
+        </mat-icon>
+
+        <h3>
+          No hay recursos todavía
+        </h3>
+
+        <p>
+          Agrega tu primer recurso utilizando el formulario.
+        </p>
+
+      </div>
+
+    }
+
+  </section>
 
 </section>
