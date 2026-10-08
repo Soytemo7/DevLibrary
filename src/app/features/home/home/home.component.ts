@@ -60,6 +60,14 @@ export class HomeComponent
   readonly displayedResources =
     signal<Resource[]>([])
 
+  readonly currentPage =
+    signal(1)
+
+  readonly totalPages =
+    signal(1)
+
+  readonly pageSize = 20
+
   ngOnInit(): void {
 
     this.loadResources()
@@ -72,32 +80,34 @@ export class HomeComponent
     this.error.set(false)
 
     this.resourceService
-      .getAll()
+      .getPaginated(
+        this.currentPage(),
+        this.pageSize,
+      )
       .subscribe({
 
-        next: resources => {
+        next: response => {
 
           const safeResources =
-            Array.isArray(resources)
-              ? resources
+            Array.isArray(
+              response.resources,
+            )
+              ? response.resources
               : []
 
           this.resources.set(
             safeResources,
           )
 
-          const featured =
-            safeResources
-              .filter(
-                resource =>
-                  resource.featured === true,
-              )
-              .slice(0, 6)
-
           this.displayedResources.set(
-            featured.length > 0
-              ? featured
-              : safeResources.slice(0, 6),
+            safeResources,
+          )
+
+          this.totalPages.set(
+            Math.max(
+              response.totalPages,
+              1,
+            ),
           )
 
           this.loading.set(false)
@@ -120,6 +130,37 @@ export class HomeComponent
         },
 
       })
+  }
+
+  previousPage(): void {
+
+    if (
+      this.currentPage() <= 1
+    ) {
+      return
+    }
+
+    this.currentPage.update(
+      page => page - 1,
+    )
+
+    this.loadResources()
+  }
+
+  nextPage(): void {
+
+    if (
+      this.currentPage() >=
+      this.totalPages()
+    ) {
+      return
+    }
+
+    this.currentPage.update(
+      page => page + 1,
+    )
+
+    this.loadResources()
   }
 
   getTags(
@@ -154,7 +195,7 @@ export class HomeComponent
           )
 
       tags.push(
-        ...separated,
+        ...separated
       )
     }
 

@@ -102,6 +102,7 @@
         <mat-icon>
           arrow_forward
         </mat-icon>
+
       </a>
 
     </div>
@@ -244,6 +245,43 @@
         }
 
       </div>
+
+      @if (totalPages() > 1) {
+
+        <div class="pagination">
+
+          <button
+            type="button"
+            (click)="previousPage()"
+            [disabled]="currentPage() === 1"
+            aria-label="Página anterior"
+          >
+            <mat-icon>
+              chevron_left
+            </mat-icon>
+          </button>
+
+          <span>
+            Página {{ currentPage() }}
+            de {{ totalPages() }}
+          </span>
+
+          <button
+            type="button"
+            (click)="nextPage()"
+            [disabled]="
+              currentPage() === totalPages()
+            "
+            aria-label="Página siguiente"
+          >
+            <mat-icon>
+              chevron_right
+            </mat-icon>
+          </button>
+
+        </div>
+
+      }
 
     } @else {
 

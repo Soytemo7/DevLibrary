@@ -17,6 +17,14 @@ import {
   Resource,
 } from '../../models/resource.model'
 
+export interface PaginatedResources {
+  resources: Resource[]
+  total: number
+  page: number
+  limit: number
+  totalPages: number
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -32,6 +40,22 @@ export class ResourceService {
     )
   }
 
+  getPaginated(
+    page: number,
+    limit: number = 20,
+  ): Observable<PaginatedResources> {
+
+    return this.http.get<PaginatedResources>(
+      `${this.apiUrl}/paged`,
+      {
+        params: {
+          page,
+          limit,
+        },
+      },
+    )
+  }
+
   getBySlug(slug: string): Observable<Resource> {
     return this.http.get<Resource>(
       `${this.apiUrl}/${slug}`,
@@ -39,34 +63,34 @@ export class ResourceService {
   }
 
   search(
-  query: string,
-  tag?: string,
-): Observable<Resource[]> {
+    query: string,
+    tag?: string,
+  ): Observable<Resource[]> {
 
-  const params: {
-    q?: string
-    tag?: string
-  } = {}
+    const params: {
+      q?: string
+      tag?: string
+    } = {}
 
-  if (query.trim()) {
+    if (query.trim()) {
 
-    params.q =
-      query.trim()
+      params.q =
+        query.trim()
+    }
+
+    if (tag?.trim()) {
+
+      params.tag =
+        tag.trim()
+    }
+
+    return this.http.get<Resource[]>(
+      `${this.apiUrl}/search`,
+      {
+        params,
+      },
+    )
   }
-
-  if (tag?.trim()) {
-
-    params.tag =
-      tag.trim()
-  }
-
-  return this.http.get<Resource[]>(
-    `${this.apiUrl}/search`,
-    {
-      params,
-    },
-  )
-}
 
   create(
     resource: Partial<Resource>,
