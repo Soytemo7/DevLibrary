@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
 
-  apiUrl: 'https://devlibrarybackend.onrender.com/api',
+  apiUrl: 'http://localhost:4000/api',
 
   supabaseUrl: 'https://cceotodinskrveslcqvx.supabase.co',
 
